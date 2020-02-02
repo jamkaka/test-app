@@ -1,0 +1,40 @@
+{
+  "questions": [
+    {
+      "title": "Jak Choroszy ma na nazwisko?",
+       "answers": [
+              {
+                  "text": "Marcin"
+              },
+              {
+                  "text": "Leg"
+              },
+              {
+                  "text": "Pieczare"
+              },
+              {
+                  "text": "Choroszy"
+              }
+          ],
+      "correctAnswer": 0
+    },
+    {
+      "title": "Jak nazywa się Marcin Pytel?",
+       "answers": [
+              {
+                  "text": "Wałęsa"
+              },
+              {
+                  "text": "Boczek"
+              },
+              {
+                  "text": "Pytel"
+              },
+              {
+                  "text": "Marcin"
+              }
+          ],
+      "correctAnswer": 0
+    }
+  ]
+}
