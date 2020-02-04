@@ -52,7 +52,7 @@
           Manage tests
         </v-list-item-content>
       </v-list-item>
-      <v-list-item to="/setttings" link>
+      <v-list-item to="/settings" link>
         <v-list-item-icon>
           <v-icon class="pa-2">settings</v-icon>
         </v-list-item-icon>

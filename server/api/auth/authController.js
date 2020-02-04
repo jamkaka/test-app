@@ -20,7 +20,7 @@ exports.register = async (req, res, next) => {
       res.status(422).json({
         status: "error",
         data: {
-          message: "Username is taken!"
+          message: "That email is taken!"
         }
       });
     }
@@ -31,13 +31,20 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const candidateUser = await User.findOne({ email });
-    const isPasswordCorrect = await candidateUser.checkPassword(password);
-    if (!candidateUser || !isPasswordCorrect) {
-      // need to return as it proceeds executing middleware without it.
+    if (!candidateUser) {
       return res.status(401).json({
         status: "error",
         data: {
-          message: "Wrong email or password. User may not exist!"
+          message: "Wrong email! User may not exist!"
+        }
+      });
+    }
+    const isPasswordCorrect = await candidateUser.checkPassword(password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        status: "error",
+        data: {
+          message: "Wrong password!"
         }
       });
     }
@@ -49,7 +56,7 @@ exports.login = async (req, res, next) => {
       }
     });
   } catch (err) {
-    res.status(200).json({
+    res.status(401).json({
       status: "error",
       data: {
         message: "Sth unexpected happened!"

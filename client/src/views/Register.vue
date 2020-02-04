@@ -1,32 +1,47 @@
 <template>
-  <v-card>
-    <CardHeading>Register</CardHeading>
-    <v-divider></v-divider>
-    <v-card-text>
-      <v-form class="px-4 pb-3">
-        <v-text-field
-          v-model="$v.email.$model"
-          :error-messages="emailErrors"
-          label="Email"
-        ></v-text-field>
-        <v-text-field
-          v-model="$v.password.$model"
-          :error-messages="passwordErrors"
-          type="password"
-          label="Password"
-        ></v-text-field>
-        <v-text-field
-          v-model="$v.confirmPassword.$model"
-          :error-messages="confirmPasswordErrors"
-          type="password"
-          label="Confirm password"
-        ></v-text-field>
-        <v-btn class="mt-2" color="red white--text" @click.prevent="register"
-          >Register</v-btn
-        >
-      </v-form>
-    </v-card-text>
-  </v-card>
+  <v-layout>
+    <v-flex>
+      <v-alert
+        :value="isAlertShown"
+        :type="alertType"
+        transition="scale-transition"
+        dismissible
+        outlined
+        >{{ alertText }}</v-alert
+      >
+      <v-card>
+        <CardHeading>Register</CardHeading>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-form class="px-4 pb-3" @keyup.enter.native="register">
+            <v-text-field
+              v-model="$v.email.$model"
+              :error-messages="emailErrors"
+              label="Email"
+            ></v-text-field>
+            <v-text-field
+              v-model="$v.password.$model"
+              :error-messages="passwordErrors"
+              type="password"
+              label="Password"
+            ></v-text-field>
+            <v-text-field
+              v-model="$v.confirmPassword.$model"
+              :error-messages="confirmPasswordErrors"
+              type="password"
+              label="Confirm password"
+            ></v-text-field>
+            <v-btn
+              class="mt-2"
+              color="red white--text"
+              @click.prevent="register"
+              >Register</v-btn
+            >
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -62,7 +77,10 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
-      isFormSubmitted: false
+      isFormSubmitted: false,
+      alertText: "",
+      alertType: "error",
+      isAlertShown: false
     };
   },
   validations: {
@@ -115,17 +133,30 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["storeToken"]),
+    manageAlert(type, text) {
+      this.isAlertShown = true;
+      this.alertType = type;
+      this.alertText = text;
+      setTimeout(() => {
+        this.isAlertShown = false;
+      }, 2500);
+    },
     async register() {
-      this.isFormSubmitted = true;
-      if (this.$v.$invalid) return;
-      const registerResponse = await http.post("/auth/register", {
-        email: this.email,
-        password: this.password,
-        confirmPassword: this.confirmPassword
-      });
-      const token = registerResponse.data.data.token;
-      this.storeToken(token);
-      this.$router.push({ name: "Home" });
+      try {
+        this.isFormSubmitted = true;
+        if (this.$v.$invalid) return;
+        const registerResponse = await http.post("/auth/register", {
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword
+        });
+        const token = registerResponse.data.data.token;
+        this.storeToken(token);
+        this.manageAlert("success", "You have successfully registered!");
+        setTimeout(() => this.$router.push({ name: "Home" }), 1500);
+      } catch (err) {
+        this.manageAlert("error", err.response.data.data.message);
+      }
     }
   }
 };

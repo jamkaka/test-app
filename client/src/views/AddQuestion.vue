@@ -19,12 +19,8 @@
     <v-stepper-items>
       <v-stepper-content step="1">
         <QuestionForm ref="addQuestionForm" @formSubmit="fillWithFormData">
-          <template #--QuestionForm--headingInForm
-            >Add Question</template
-          >
-          <template #--QuestionForm--submitBtnText--
-            >Continue</template
-          >
+          <template #--QuestionForm--headingInForm>Add Question</template>
+          <template #--QuestionForm--submitBtnText-->Continue</template>
         </QuestionForm>
       </v-stepper-content>
 
